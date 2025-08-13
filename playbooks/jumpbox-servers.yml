@@ -1,0 +1,5 @@
+---
+- hosts: jumpbox-servers
+  become: true
+  roles:
+    - jumpbox
