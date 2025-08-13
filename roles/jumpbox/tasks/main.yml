@@ -1,0 +1,9 @@
+---
+
+- name: Install battleshed private ssh key for aws hosts
+  copy:
+    src: /home/dant/.ssh/battleshed-aws
+    dest: /home/admin/.ssh/battleshed-aws
+    mode: 0600
+    owner: admin
+    group: admin
