@@ -7,3 +7,13 @@
     mode: 0600
     owner: admin
     group: admin
+
+- name: Install software required for kubernetes-the-hard-way
+  apt:
+    pkg:
+      - wget
+      - curl
+      - vim
+      - openssl
+      - git
+    update_cache: yes
