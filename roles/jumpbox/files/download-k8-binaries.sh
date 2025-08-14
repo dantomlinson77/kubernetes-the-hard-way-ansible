@@ -43,6 +43,12 @@ rm -rf downloads/*gz
   chmod +x downloads/{client,cni-plugins,controller,worker}/*
 }
 
+{
+  cp downloads/client/kubectl /usr/local/bin/
+}
+
+kubectl version --client
+
 echo
 echo "Downloading k8 binaries complete here is the tree:"
 tree downloads
