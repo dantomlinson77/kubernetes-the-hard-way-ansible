@@ -1,0 +1,22 @@
+---
+
+- name: Install battleshed private ssh key for aws hosts
+  copy:
+    src: /home/dant/.ssh/battleshed-aws
+    dest: /home/admin/.ssh/id_rsa
+    mode: 0600
+    owner: admin
+    group: admin
+
+- name: Set hostname
+  hostname:
+    name: {{ inventory_hostname }}
+    use: systemd
+
+- name: Add Domain line to /etc/systemd/resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    insertafter: '^\[Resolve\].*'
+    line: Domains=battleshed.uk
+  notify:
+    - Restart systemd-resolved

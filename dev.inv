@@ -3,6 +3,7 @@ aws-servers
 
 [aws-servers:children]
 jumpbox-servers
+internal-servers
 
 [jumpbox-servers:vars]
 ansible_user=admin
@@ -10,3 +11,12 @@ ansible_ssh_private_key_file=~/.ssh/battleshed-aws
 
 [jumpbox-servers]
 jumpbox.battleshed.uk
+
+[internal-servers:vars]
+ansible_user=admin
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q username@jumpbox.battleshed.uk"'
+
+[internal-servers]
+server.battleshed.uk
+node-0.battleshed.uk
+node-1.battleshed.uk
