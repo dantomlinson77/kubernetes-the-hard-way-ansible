@@ -3,7 +3,7 @@
 - name: Install battleshed private ssh key for aws hosts
   copy:
     src: /home/dant/.ssh/battleshed-aws
-    dest: /home/admin/.ssh/battleshed-aws
+    dest: /home/admin/.ssh/id_rsa
     mode: 0600
     owner: admin
     group: admin
@@ -25,13 +25,20 @@
     dest: /root/kubernetes-the-hard-way
     depth: 1
 
-#- name: Copy the download-k8-binaries.sh script to jumpbox
-#  copy:
-#    src: download-k8-binaries.sh
-#    dest: /root/kubernetes-the-hard-way
-#    mode: 0700
-
 - name: Run the download-k8-binaries.sh script on the jumpbox
   script: download-k8-binaries.sh
   args:
     creates: /root/kubernetes-the-hard-way/downloads/worker
+
+- name: Set jumpbox hostname
+  hostname:
+    name: jumpbox.battleshed.uk
+    use: systemd
+
+- name: Add Domain line to /etc/systemd/resolved.conf
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    insertafter: '^\[Resolve\].*'
+    line: Domains=battleshed.uk
+  notify:
+    - Restart systemd-resolved
