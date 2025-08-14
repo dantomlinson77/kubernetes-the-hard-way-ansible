@@ -16,6 +16,7 @@
       - vim
       - openssl
       - git
+      - tree
     update_cache: yes
 
 - name: Clone the kubernetes-the-hard-way git repo into root home
@@ -24,10 +25,13 @@
     dest: /root/kubernetes-the-hard-way
     depth: 1
 
-- name: Copy the download-k8-binaries.sh script to jumpbox
-  copy:
-    src: download-k8-binaries.sh
-    dest: /root/kubernetes-the-hard-way
-    mode: 0700
+#- name: Copy the download-k8-binaries.sh script to jumpbox
+#  copy:
+#    src: download-k8-binaries.sh
+#    dest: /root/kubernetes-the-hard-way
+#    mode: 0700
 
-- name: Run the download-k8-binaries.sh script
+- name: Run the download-k8-binaries.sh script on the jumpbox
+  script: download-k8-binaries.sh
+  args:
+    creates: /root/kubernetes-the-hard-way/downloads/worker

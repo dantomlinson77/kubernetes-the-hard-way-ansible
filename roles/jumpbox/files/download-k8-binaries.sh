@@ -1,6 +1,13 @@
 #!/bin/bash
 
+# log output
+exec &>>"/var/log/download-k8-binaries.log"
+
+echo "----------------"
+date
 echo "Downloading k8 binaries"
+
+cd /root/kubernetes-the-hard-way
 
 wget -q --show-progress \
   --https-only \
