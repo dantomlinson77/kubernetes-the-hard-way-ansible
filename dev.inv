@@ -14,7 +14,7 @@ jumpbox.battleshed.uk
 
 [internal-servers:vars]
 ansible_user=admin
-ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q username@jumpbox.battleshed.uk"'
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q admin@jumpbox.battleshed.uk"'
 
 [internal-servers:children]
 master-servers
