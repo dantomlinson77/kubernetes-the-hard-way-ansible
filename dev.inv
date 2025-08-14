@@ -16,7 +16,13 @@ jumpbox.battleshed.uk
 ansible_user=admin
 ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q username@jumpbox.battleshed.uk"'
 
-[internal-servers]
+[internal-servers:children]
+master-servers
+node-servers
+
+[master-servers]
 server.battleshed.uk
+
+[node-servers]
 node-0.battleshed.uk
 node-1.battleshed.uk

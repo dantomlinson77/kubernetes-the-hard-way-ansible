@@ -1,0 +1,5 @@
+---
+- hosts: node-servers
+  become: true
+  roles:
+    - common

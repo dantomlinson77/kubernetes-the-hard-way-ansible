@@ -10,7 +10,7 @@
 
 - name: Set hostname
   hostname:
-    name: {{ inventory_hostname }}
+    name: "{{ inventory_hostname }}"
     use: systemd
 
 - name: Add Domain line to /etc/systemd/resolved.conf

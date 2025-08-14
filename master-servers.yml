@@ -1,0 +1,5 @@
+---
+- hosts: master-servers
+  become: true
+  roles:
+    - common
