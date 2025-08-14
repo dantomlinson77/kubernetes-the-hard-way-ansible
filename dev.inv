@@ -9,4 +9,4 @@ ansible_user=admin
 ansible_ssh_private_key_file=~/.ssh/battleshed-aws
 
 [jumpbox-servers]
-3.8.124.215    # current IP of jumpbox
+18.134.227.248    # current IP of jumpbox
