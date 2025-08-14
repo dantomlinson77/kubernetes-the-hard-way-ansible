@@ -1,0 +1,7 @@
+---
+
+# master playbook that runs all the others
+
+- import_playbook: jumpbox-servers.yml
+- import_playbook: master-servers.yml
+- import_playbook: node-servers.yml
