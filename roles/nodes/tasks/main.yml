@@ -5,8 +5,23 @@
     path: /var/lib/kubelet/
     state: directory
 
-- name: Transfer ca files from jumpbox to nodes
+- name: Transfer ca.crt from jumpbox to nodes
   synchronize:
     src: /root/kubernetes-the-hard-way/ca.crt
     dest: /var/lib/kubelet/ca.crt
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer host cert files from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/{{ inventory_hostname_short }}.crt"
+    dest: /var/lib/kubelet/kubelet.crt
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer host key files from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/{{ inventory_hostname_short }}.key"
+    dest: /var/lib/kubelet/kubelet.key
+    set_remote_user: false
   delegate_to: jumpbox.battleshed.uk

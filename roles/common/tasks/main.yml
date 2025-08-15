@@ -6,13 +6,21 @@
       - rsync
     update_cache: yes
 
-- name: Install battleshed private ssh key for aws hosts
+- name: Install battleshed private ssh key to admin users
   copy:
     src: /home/dant/.ssh/battleshed-aws
-    dest: /home/admin/.ssh/id_rsa
+    dest: "/home/admin/.ssh/id_rsa"
     mode: 0600
-    owner: admin
-    group: admin
+    owner: "admin"
+    group: "admin"
+
+- name: Install battleshed private ssh key to root users
+  copy:
+    src: /home/dant/.ssh/battleshed-aws
+    dest: "/root/.ssh/id_rsa"
+    mode: 0600
+    owner: "root"
+    group: "root"
 
 - name: Set hostname
   hostname:
