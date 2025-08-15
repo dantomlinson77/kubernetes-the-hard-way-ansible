@@ -1,5 +1,11 @@
 ---
 
+- name: Install software required for kubernetes-the-hard-way
+  apt:
+    pkg:
+      - rsync
+    update_cache: yes
+
 - name: Install battleshed private ssh key for aws hosts
   copy:
     src: /home/dant/.ssh/battleshed-aws

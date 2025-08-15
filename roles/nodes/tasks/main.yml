@@ -1,0 +1,12 @@
+---
+
+- name: Make kublet directory
+  file:
+    path: /var/lib/kubelet/
+    state: directory
+
+- name: Transfer ca files from jumpbox to nodes
+  synchronize:
+    src: /root/kubernetes-the-hard-way/ca.crt
+    dest: /var/lib/kubelet/ca.crt
+  delegate_to: jumpbox.battleshed.uk

@@ -21,3 +21,8 @@
   script: download-k8-binaries.sh
   args:
     creates: /root/kubernetes-the-hard-way/downloads/worker
+
+- name: Run the create-cert-authority-files.sh script on the jumpbox
+  script: create-cert-authority-files.sh
+  args:
+    creates: /root/kubernetes-the-hard-way/ca.key
