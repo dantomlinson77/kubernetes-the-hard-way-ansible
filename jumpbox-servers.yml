@@ -1,5 +1,5 @@
 ---
-- hosts: jumpbox-servers
+- hosts: jumpbox_servers
   become: true
   roles:
     - common

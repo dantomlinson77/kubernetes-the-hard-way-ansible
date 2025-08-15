@@ -1,26 +1,26 @@
 [dev:children]
-aws-servers
+aws_servers
 
-[aws-servers:children]
-jumpbox-servers
-internal-servers
+[aws_servers:children]
+jumpbox_servers
+internal_servers
 
-[aws-servers:vars]
+[aws_servers:vars]
 ansible_user=admin
 
-[jumpbox-servers]
+[jumpbox_servers]
 jumpbox.battleshed.uk
 
-[internal-servers:vars]
+[internal_servers:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q admin@jumpbox.battleshed.uk"'
 
-[internal-servers:children]
-master-servers
-node-servers
+[internal_servers:children]
+master_servers
+node_servers
 
-[master-servers]
+[master_servers]
 server.battleshed.uk
 
-[node-servers]
+[node_servers]
 node-0.battleshed.uk
 node-1.battleshed.uk
