@@ -8,9 +8,6 @@
   delegate_to: jumpbox.battleshed.uk
   loop:
     - ca.key
-    - ca.crt
-    - kube-api-server.key
-    - kube-api-server.crt
     - service-accounts.key
     - service-accounts.crt
     - admin.kubeconfig
@@ -18,12 +15,52 @@
     - kube-scheduler.kubeconfig
     - encryption-config.yaml
 
-- name: Transfer etcd binaries from jumpbox to server
+- name: Transfer etcd binary from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/controller/etcd"
+    dest: "/usr/local/bin/etcd"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer etcdctl binary from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/client/etcdctl"
+    dest: "/usr/local/bin/etcdctl"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer etcd.service file from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/units/etcd.service"
+    dest: "/etc/systemd/system/etcd.service"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Make /etc/etcd directory
+  file:
+    path: "/etc/etcd"
+    state: directory
+    mode: 0700
+
+- name: Make /var/lib/etcd directory
+  file:
+    path: "/var/lib/etcd"
+    state: directory
+
+- name: Configure the etcd server
   synchronize:
     src: "/root/kubernetes-the-hard-way/{{ item }}"
-    dest: "/usr/local/bin/{{ item }}"
+    dest: "/etc/etcd/{{ item }}"
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
   loop:
-    - downloads/controller/etcd
-    - downloads/client/etcdctl
+    - ca.crt
+    - kube-api-server.key
+    - kube-api-server.crt
+
+- name: Enable and start the etcd service
+  systemd_service:
+    name: etcd
+    state: started
+    enabled: true
+    daemon_reload: true
