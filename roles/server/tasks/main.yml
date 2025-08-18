@@ -7,13 +7,11 @@
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
   loop:
-    - ca.key
-    - service-accounts.key
-    - service-accounts.crt
     - admin.kubeconfig
     - kube-controller-manager.kubeconfig
     - kube-scheduler.kubeconfig
-    - encryption-config.yaml
+
+# Bootstrapping etcd https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/07-bootstrapping-etcd.md
 
 - name: Transfer etcd binary from jumpbox to server
   synchronize:
@@ -64,3 +62,70 @@
     state: started
     enabled: true
     daemon_reload: true
+
+# Bootstrapping kubernetes control plane https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/08-bootstrapping-kubernetes-controllers.md
+
+- name: Make /etc/kubernetes/config directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /etc/kubernetes/config
+    - /var/lib/kubernetes/
+
+- name: Transfer kubernetes controller binaries from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/controller/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+
+- name: Transfer kubectl binaries from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/client/kubectl"
+    dest: "/usr/local/bin/kubectl"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer kubernetes API server config from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/{{ item }}"
+    dest: "/var/lib/kubernetes/{{ item }}"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - ca.crt
+    - ca.key
+    - kube-api-server.key
+    - kube-api-server.crt
+    - service-accounts.key
+    - service-accounts.crt
+    - encryption-config.yaml
+    - kube-controller-manager.kubeconfig
+    - kube-scheduler.kubeconfig
+
+- name: Transfer systemd service file from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/units/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - kube-apiserver.service
+    - kube-controller-manager.service
+    - kube-scheduler.service
+
+- name: Enable and start the etcd service
+  systemd_service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  loop:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
