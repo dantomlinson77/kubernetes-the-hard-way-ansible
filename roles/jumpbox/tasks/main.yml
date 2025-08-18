@@ -30,4 +30,4 @@
 - name: Run the generate-kubeconfig-files.sh script on the jumpbox
   script: generate-kubeconfig-files.sh
   args:
-    creates: /root/kubernetes-the-hard-way/admin.kubeconfig
+    creates: /root/kubernetes-the-hard-way/encryption-config.yaml
