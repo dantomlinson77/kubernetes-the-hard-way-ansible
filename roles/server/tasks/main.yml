@@ -17,3 +17,13 @@
     - kube-controller-manager.kubeconfig
     - kube-scheduler.kubeconfig
     - encryption-config.yaml
+
+- name: Transfer etcd binaries from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/{{ item }}"
+    dest: "/usr/local/bin/{{ item }}"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - downloads/controller/etcd
+    - downloads/client/etcdctl
