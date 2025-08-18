@@ -26,3 +26,8 @@
   script: create-cert-authority-files.sh
   args:
     creates: /root/kubernetes-the-hard-way/ca.key
+
+- name: Run the generate-kubeconfig-files.sh script on the jumpbox
+  script: generate-kubeconfig-files.sh
+  args:
+    creates: /root/kubernetes-the-hard-way/admin.kubeconfig

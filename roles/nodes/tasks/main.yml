@@ -2,8 +2,11 @@
 
 - name: Make kublet directory
   file:
-    path: /var/lib/kubelet/
+    path: "/var/lib/{{ item }}"
     state: directory
+  loop:
+    - kubelet
+    - kube-proxy
 
 - name: Transfer ca.crt from jumpbox to nodes
   synchronize:
@@ -23,5 +26,19 @@
   synchronize:
     src: "/root/kubernetes-the-hard-way/{{ inventory_hostname_short }}.key"
     dest: /var/lib/kubelet/kubelet.key
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer kube-proxy.kubeconfig from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/kube-proxy.kubeconfig"
+    dest: /var/lib/kube-proxy/kubeconfig
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer node kublet kubeconfig from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/{{ inventory_hostname_short }}.kubeconfig"
+    dest: /var/lib/kubelet/kubeconfig
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk

@@ -1,6 +1,6 @@
 ---
 
-- name: Transfer certs and keys from jumpbox to server
+- name: Transfer certs, keys and config files from jumpbox to server
   synchronize:
     src: "/root/kubernetes-the-hard-way/{{ item }}"
     dest: "/root/{{ item }}"
@@ -13,3 +13,6 @@
     - kube-api-server.crt
     - service-accounts.key
     - service-accounts.crt
+    - admin.kubeconfig
+    - kube-controller-manager.kubeconfig
+    - kube-scheduler.kubeconfig
