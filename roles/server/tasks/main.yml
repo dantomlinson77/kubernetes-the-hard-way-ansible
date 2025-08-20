@@ -135,5 +135,5 @@
 
 - name: Apply the cluster config
   script: apply-cluster-config.sh
-#  args:
-#    creates: /root/kubernetes-the-hard-way/ca.key
+  args:
+    creates: /root/cluster-config-applied
