@@ -24,7 +24,7 @@
 
 - name: Set hostname
   hostname:
-    name: "{{ inventory_hostname_short }}.kubernetes.local"
+    name: "{{ inventory_hostname_short }}"
     use: systemd
 
 - name: Add Domain line to /etc/systemd/resolved.conf

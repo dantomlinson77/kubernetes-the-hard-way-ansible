@@ -149,7 +149,7 @@
 - name: Transfer kube-proxy-config.yaml from jumpbox to nodes
   synchronize:
     src: "/root/kubernetes-the-hard-way/configs/kube-proxy-config.yaml"
-    dest: /var/lib/kubelet/kube-proxy-config.yaml
+    dest: /var/lib/kube-proxy/kube-proxy-config.yaml
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
 
