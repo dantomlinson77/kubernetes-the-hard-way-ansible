@@ -15,7 +15,7 @@ for host in node-0 node-1; do
   kubectl config set-cluster kubernetes-the-hard-way \
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.battleshed.uk:6443 \
+    --server=https://server.kubernetes.local:6443 \
     --kubeconfig=${host}.kubeconfig
 
   kubectl config set-credentials system:node:${host} \
@@ -39,7 +39,7 @@ echo "Generating kube-proxy kubeconfig files..."
   kubectl config set-cluster kubernetes-the-hard-way \
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.battleshed.uk:6443 \
+    --server=https://server.kubernetes.local:6443 \
     --kubeconfig=kube-proxy.kubeconfig
 
   kubectl config set-credentials system:kube-proxy \
@@ -63,7 +63,7 @@ echo "Generating kube-controller-manager kubeconfig files..."
   kubectl config set-cluster kubernetes-the-hard-way \
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.battleshed.uk:6443 \
+    --server=https://server.kubernetes.local:6443 \
     --kubeconfig=kube-controller-manager.kubeconfig
 
   kubectl config set-credentials system:kube-controller-manager \
@@ -87,7 +87,7 @@ echo "Generating kube-scheduler kubeconfig files..."
   kubectl config set-cluster kubernetes-the-hard-way \
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.battleshed.uk:6443 \
+    --server=https://server.kubernetes.local:6443 \
     --kubeconfig=kube-scheduler.kubeconfig
 
   kubectl config set-credentials system:kube-scheduler \
