@@ -24,13 +24,13 @@
 
 - name: Set hostname
   hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ inventory_hostname_short }}.kubernetes.local"
     use: systemd
 
 - name: Add Domain line to /etc/systemd/resolved.conf
   lineinfile:
     path: /etc/systemd/resolved.conf
     insertafter: '^\[Resolve\].*'
-    line: Domains=battleshed.uk
+    line: "Domains=battleshed.uk kubernetes.local"
   notify:
     - Restart systemd-resolved
