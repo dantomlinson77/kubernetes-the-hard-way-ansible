@@ -1,12 +1,26 @@
 ---
 
-- name: Make kublet directory
+- name: Install software required for worker node
+  apt:
+    pkg:
+      - socat
+      - conntrack
+      - ipset
+      - kmod
+    update_cache: yes
+
+- name: Make directories for worker node
   file:
-    path: "/var/lib/{{ item }}"
+    path: "{{ item }}"
     state: directory
   loop:
-    - kubelet
-    - kube-proxy
+    - /var/lib/kubelet
+    - /var/lib/kube-proxy
+    - /etc/cni/net.d
+    - /opt/cni/bin
+    - /var/lib/kubernetes
+    - /var/run/kubernetes
+    - /etc/containerd/
 
 - name: Transfer ca.crt from jumpbox to nodes
   synchronize:
@@ -42,3 +56,121 @@
     dest: /var/lib/kubelet/kubeconfig
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer worker binaries from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/worker/{{ item }}"
+    dest: /usr/local/bin/
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - crictl
+    - kube-proxy
+    - kubelet
+    - runc
+
+- name: Transfer containerd binaries from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/worker/{{ item }}"
+    dest: /bin/
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - containerd
+    - containerd-shim-runc-v2
+    - containerd-stress
+
+# Networking config
+
+- name: Transfer network config from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/{{ item }}"
+    dest: /etc/cni/net.d/
+    set_remote_user: false
+    rsync_opts:
+      - "--ignore-existing"
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - 10-bridge.conf
+    - 99-loopback.conf
+
+- name: Set subnet in 10-bridge.conf
+  replace:
+    path: /etc/cni/net.d/10-bridge.conf
+    regexp: 'SUBNET'
+    replace: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['network'] }}/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['prefix'] }}"
+
+- name: Add the br-netfilter kernel module and make sure it is loaded after reboots
+  community.general.modprobe:
+    name: br-netfilter
+    state: present
+    persistent: present
+
+- ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: '1'
+    sysctl_file: /etc/sysctl.d/kubernetes.conf
+    state: present
+    reload: true
+  loop:
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
+
+# Configure containerd, kubelet and kube-proxy
+
+- name: Transfer containerd-config.toml from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/containerd-config.toml"
+    dest: "/etc/containerd/config.toml"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer containerd-config.toml from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/containerd-config.toml"
+    dest: "/etc/containerd/config.toml"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+### DOES THIS NEED SUBNET SETTING?
+- name: Transfer kubelet-config.yaml from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/kubelet-config.yaml"
+    dest: /var/lib/kubelet/kubelet-config.yaml
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+#- name: Set subnet in /var/lib/kubelet/kubelet-config.yaml
+#  replace:
+#    path: /var/lib/kubelet/kubelet-config.yaml
+#    regexp: 'SUBNET'
+#    replace: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['network'] }}/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['prefix'] }}"
+
+- name: Transfer kube-proxy-config.yaml from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/kube-proxy-config.yaml"
+    dest: /var/lib/kubelet/kube-proxy-config.yaml
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
+- name: Transfer node systemd service files from jumpbox to nodes
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/units/{{ item }}"
+    dest: /etc/systemd/system/
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+  loop:
+    - containerd.service
+    - kubelet.service
+    - kube-proxy.service
+
+- name: Enable and start the services
+  systemd_service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+    daemon_reload: true
+  loop:
+    - containerd
+    - kubelet
+    - kube-proxy

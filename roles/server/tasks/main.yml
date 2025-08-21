@@ -115,7 +115,7 @@
     - kube-controller-manager.service
     - kube-scheduler.service
 
-- name: Enable and start the etcd service
+- name: Enable and start the services
   systemd_service:
     name: "{{ item }}"
     state: started
