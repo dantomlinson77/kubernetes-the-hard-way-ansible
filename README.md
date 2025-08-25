@@ -37,7 +37,7 @@ This repository aligns with the major phases of the course and turns their shell
 
 ## Configuration notes
 
-- Root SSH login: Tasks may enable root login and push an authorized key for lab convenience. This is not recommended for production. Adjust to your policy (e.g., disable, or set `PermitRootLogin prohibit-password`).
+- Root SSH login: Tasks enable root login and push an authorized key for lab convenience. This is not recommended for production. Adjust to your policy (e.g., disable, or set `PermitRootLogin prohibit-password`).
 - Authorized key: Ensure the public key path you provide exists on the control node. Use placeholders like `/home/<you>/.ssh/<your_key>.pub`.
 - Static routes: If your lab requires custom routing, provide variables that your routes template expects (destination CIDRs, next-hops, interfaces).
 
