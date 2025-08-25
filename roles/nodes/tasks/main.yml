@@ -132,7 +132,6 @@
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
 
-### DOES THIS NEED SUBNET SETTING?
 - name: Transfer kubelet-config.yaml from jumpbox to nodes
   synchronize:
     src: "/root/kubernetes-the-hard-way/configs/kubelet-config.yaml"
@@ -158,35 +157,20 @@
     - kubelet.service
     - kube-proxy.service
 
+- name: Download the Container Network Interface (CNI) plugins
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/downloads/cni-plugins/"
+    dest: /opt/cni/bin/
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
+
 - name: Enable and start the services
   systemd_service:
     name: "{{ item }}"
-    state: started
+    state: restarted
     enabled: true
     daemon_reload: true
   loop:
     - containerd
     - kubelet
     - kube-proxy
-
-# Add static routes
-
-#- debug:
-#    msg: "Running this on server: ip route add {{ subnets[inventory_hostname_short] }} via {{ ansible_default_ipv4.address }}"
-#
-#- debug:
-#    msg: "Running this on {{ inventory_hostname_short }}: ip route add {{ item.value }} via {{ item.key }}"
-#  loop: "{{ subnets | dict2items }}"
-
-#- name: Copy add_static_routes.sh script to nodes
-#  template:
-#    src: add_static_routes.sh.j2
-#    dest: /root/add_static_routes.sh
-#    mode: 0700
-
-
-#- name: Add static routes on server for the nodes
-#  shell:
-#    cmd: "ip route add {{ subnets[inventory_hostname_short] }} via {{ ansible_default_ipv4.address }}"
-#  delegate_to: server.battleshed.uk
-
