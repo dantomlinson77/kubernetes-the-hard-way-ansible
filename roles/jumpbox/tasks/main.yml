@@ -11,6 +11,10 @@
       - tree
     update_cache: yes
 
+- name: Install k9scli because its cool
+  apt:
+    deb: https://github.com/derailed/k9s/releases/download/v0.50.9/k9s_linux_amd64.deb
+
 - name: Clone the kubernetes-the-hard-way git repo into root home
   git:
     repo: https://github.com/kelseyhightower/kubernetes-the-hard-way.git
