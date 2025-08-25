@@ -1,4 +1,4 @@
-# battleshed-ansible
+# kubernetes-the-hard-way-ansible
 
 An Ansible-driven rendition of “Kubernetes The Hard Way” (KTHW).  The original course is here https://github.com/kelseyhightower/kubernetes-the-hard-way 
 
