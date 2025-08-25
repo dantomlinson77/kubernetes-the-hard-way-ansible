@@ -167,7 +167,7 @@
 - name: Enable and start the services
   systemd_service:
     name: "{{ item }}"
-    state: restarted
+    state: started
     enabled: true
     daemon_reload: true
   loop:
