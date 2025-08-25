@@ -14,14 +14,14 @@ This code was written mainly as a learning exercise for my own use, so there are
   - Preparing TLS assets via a local CA for components and nodes
   - Generating kubeconfig files for components and users
   - Downloading Kubernetes binaries needed by the lab
-- Configures SSH on lab nodes and can install an authorized key for root (lab convenience)
-- Optionally applies static routes required by typical lab topologies
+  - Configures SSH on lab nodes and installs an authorized key for root (lab convenience)
+  - Applies static routes required by typical lab topologies
 
 Where blocks of shell commands are used exactly as per the original KTHW, this project aims to make them idempotent to avoid re-running unnecessarily.
 
 ## Requirements
 
-The project assumes you have provided 4 Debian 12 (bookworm) hosts as per the "Prerequisites" section:
+The project assumes you have provided four Debian 12 (bookworm) hosts as per the "Prerequisites" section:
 
 https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/01-prerequisites.md
 
