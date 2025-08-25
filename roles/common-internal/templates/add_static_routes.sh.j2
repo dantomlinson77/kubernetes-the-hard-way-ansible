@@ -8,3 +8,5 @@ NODE_IP="$(dig +short {{ item.key }})"
 ip route replace {{ item.value }} via ${NODE_IP}
 {% endif %}
 {% endfor %}
+
+touch /root/static_routes_added

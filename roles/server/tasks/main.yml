@@ -87,7 +87,7 @@
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
 
-- name: Transfer kubernetes API server config from jumpbox to server
+- name: Transfer kubernetes server configs from jumpbox to server
   synchronize:
     src: "/root/kubernetes-the-hard-way/{{ item }}"
     dest: "/var/lib/kubernetes/{{ item }}"
@@ -103,6 +103,13 @@
     - encryption-config.yaml
     - kube-controller-manager.kubeconfig
     - kube-scheduler.kubeconfig
+
+- name: Transfer kubernetes API server config from jumpbox to server
+  synchronize:
+    src: "/root/kubernetes-the-hard-way/configs/kube-scheduler.yaml"
+    dest: "/etc/kubernetes/config/kube-scheduler.yaml"
+    set_remote_user: false
+  delegate_to: jumpbox.battleshed.uk
 
 - name: Transfer systemd service file from jumpbox to server
   synchronize:
