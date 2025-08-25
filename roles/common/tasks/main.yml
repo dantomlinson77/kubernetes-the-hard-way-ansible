@@ -4,6 +4,7 @@
   apt:
     pkg:
       - rsync
+      - dnsutils
     update_cache: yes
 
 - name: Install battleshed private ssh key to admin users

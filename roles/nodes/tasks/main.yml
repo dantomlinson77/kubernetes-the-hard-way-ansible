@@ -98,7 +98,7 @@
   replace:
     path: /etc/cni/net.d/10-bridge.conf
     regexp: 'SUBNET'
-    replace: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['network'] }}/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['prefix'] }}"
+    replace: "{{ subnets[inventory_hostname] }}"
 
 - name: Add the br-netfilter kernel module and make sure it is loaded after reboots
   community.general.modprobe:
@@ -140,12 +140,6 @@
     set_remote_user: false
   delegate_to: jumpbox.battleshed.uk
 
-#- name: Set subnet in /var/lib/kubelet/kubelet-config.yaml
-#  replace:
-#    path: /var/lib/kubelet/kubelet-config.yaml
-#    regexp: 'SUBNET'
-#    replace: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['network'] }}/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['prefix'] }}"
-
 - name: Transfer kube-proxy-config.yaml from jumpbox to nodes
   synchronize:
     src: "/root/kubernetes-the-hard-way/configs/kube-proxy-config.yaml"
@@ -174,3 +168,25 @@
     - containerd
     - kubelet
     - kube-proxy
+
+# Add static routes
+
+#- debug:
+#    msg: "Running this on server: ip route add {{ subnets[inventory_hostname_short] }} via {{ ansible_default_ipv4.address }}"
+#
+#- debug:
+#    msg: "Running this on {{ inventory_hostname_short }}: ip route add {{ item.value }} via {{ item.key }}"
+#  loop: "{{ subnets | dict2items }}"
+
+#- name: Copy add_static_routes.sh script to nodes
+#  template:
+#    src: add_static_routes.sh.j2
+#    dest: /root/add_static_routes.sh
+#    mode: 0700
+
+
+#- name: Add static routes on server for the nodes
+#  shell:
+#    cmd: "ip route add {{ subnets[inventory_hostname_short] }} via {{ ansible_default_ipv4.address }}"
+#  delegate_to: server.battleshed.uk
+

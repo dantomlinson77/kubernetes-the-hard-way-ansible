@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Adding static routes on {{ inventory_hostname_short }}"
+
+{% for item in subnets | dict2items %}
+{% if item.key != inventory_hostname %}
+NODE_IP="$(dig +short {{ item.key }})"
+ip route replace {{ item.value }} via ${NODE_IP}
+{% endif %}
+{% endfor %}

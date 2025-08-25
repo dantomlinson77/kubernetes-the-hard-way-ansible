@@ -15,3 +15,12 @@
     user: root
     state: present
     key: "{{ lookup('file', '/home/dant/.ssh/battleshed-aws.pub') }}"
+
+- name: Temple add_static_routes.sh script
+  template:
+    src: add_static_routes.sh.j2
+    dest: /root/add_static_routes.sh
+    mode: 0700
+
+- name: Run the add_static_routes.sh script
+  shell: /root/add_static_routes.sh

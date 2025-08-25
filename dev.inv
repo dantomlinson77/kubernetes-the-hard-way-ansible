@@ -19,8 +19,8 @@ master_servers
 node_servers
 
 [master_servers]
-server.battleshed.uk
+server.kubernetes.local
 
 [node_servers]
-node-0.battleshed.uk
-node-1.battleshed.uk
+node-0.kubernetes.local
+node-1.kubernetes.local
