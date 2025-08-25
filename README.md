@@ -44,7 +44,7 @@ This repository aligns with the major phases of the course and turns their shell
 ## Design goals and scope
 
 - Faithful to the KTHW learning path while leveraging Ansible’s idempotency
-- Minimal assumptions about your infrastructure—intended for disposable/lab systems
+- Minimal assumptions about your infrastructure. Intended for disposable/lab systems
 - Avoids copying course content; focuses on automating the same steps
 
 Non-goals:
