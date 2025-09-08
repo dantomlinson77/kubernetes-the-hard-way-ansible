@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit on any non-zero
+set -e
+
 echo "Adding static routes on {{ inventory_hostname_short }}"
 
 {% for item in subnets | dict2items %}

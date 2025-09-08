@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# exit on any non-zero
+set -e
+
 # log output
-exec &>>"/var/log/generate-kubeconfig-files.log"
+exec &>>"/var/log/k8s-the-hard-way/generate-kubeconfig-files.log"
 
 echo "----------------"
 date

@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# exit on any non-zero
+set -e
+
 # log output
-exec &>>"/var/log/download-k8-binaries.log"
+exec &>>"/var/log/k8s-the-hard-way/download-k8-binaries.log"
 
 echo "----------------"
 date

@@ -7,6 +7,11 @@
       - dnsutils
     update_cache: yes
 
+- name: Make log directory for shell scripts
+  file:
+    path: "/var/log/k8s-the-hard-way"
+    state: directory
+
 - name: Install battleshed private ssh key to admin users
   copy:
     src: /home/dant/.ssh/battleshed-aws

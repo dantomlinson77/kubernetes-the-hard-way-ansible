@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# exit on any non-zero
+set -e
+
 # log output
-exec &>>"/var/log/create-cert-authority-files.log"
+exec &>>"/var/log/k8s-the-hard-way/create-cert-authority-files.log"
 
 echo "----------------"
 date
